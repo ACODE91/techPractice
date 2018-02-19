@@ -14,14 +14,15 @@ router.route('/')
         resolve(results)
       })
     }).then(function(value) {
-      console.log('testing promise')
-      //filter by score and only keep the highest ten
-      value.sort(function(a, b){
-        return b.score - a.score;
-      })
+      // console.log('testing promise')
+      // //filter by score and only keep the highest ten
+      // value.sort(function(a, b){
+      //   return b.by.karma - a.by.karma;
+      // })
  
-      var topTen = value.slice(0, 10);
-      res.json(topTen);
+      // var topTen = value.slice(0, 10);
+      // res.json(topTen);
+      res.json(value)
     });
 
      // TODO: Replace this with stories you've retrieved from the database

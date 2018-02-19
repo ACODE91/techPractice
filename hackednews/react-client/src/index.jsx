@@ -19,11 +19,33 @@ class App extends React.Component {
         dataType: 'json',
         success: (sampleData) => {
             this.setState({hackerData: sampleData});
-            // console.log(this.state.hackerData)
         }
         })
-
     }
+
+    changeStateByFilteringAuthor(){
+      var sortingState = this.state.hackerData;
+
+        sortingState.sort(function(a, b){
+        return b.by.karma - a.by.karma;
+        });
+
+        sortingState = sortingState.slice(0, 10);
+
+        this.setState({hackerData: sortingState});
+    }
+
+    changeStateByFilteringStory(){
+        var sortingState = this.state.hackerData;
+  
+          sortingState.sort(function(a, b){
+          return b.score - a.score;
+          });
+  
+          sortingState = sortingState.slice(0, 10);
+  
+          this.setState({hackerData: sortingState});
+      }
 
     componentDidMount() {
         this.renderDefault()
@@ -44,8 +66,10 @@ class App extends React.Component {
     // }
 
    render() { 
-    return (  
-    <TopTen topTenData={this.state.hackerData}/>
+    return (      
+    <TopTen topTenData={this.state.hackerData} 
+    filterStory={this.changeStateByFilteringStory.bind(this)}
+    filterState={this.changeStateByFilteringAuthor.bind(this)}/>
     )
    }
 }

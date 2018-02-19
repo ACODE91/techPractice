@@ -104,9 +104,34 @@
 	                dataType: 'json',
 	                success: function success(sampleData) {
 	                    _this2.setState({ hackerData: sampleData });
-	                    // console.log(this.state.hackerData)
 	                }
 	            });
+	        }
+	    }, {
+	        key: 'changeStateByFilteringAuthor',
+	        value: function changeStateByFilteringAuthor() {
+	            var sortingState = this.state.hackerData;
+	
+	            sortingState.sort(function (a, b) {
+	                return b.by.karma - a.by.karma;
+	            });
+	
+	            sortingState = sortingState.slice(0, 10);
+	
+	            this.setState({ hackerData: sortingState });
+	        }
+	    }, {
+	        key: 'changeStateByFilteringStory',
+	        value: function changeStateByFilteringStory() {
+	            var sortingState = this.state.hackerData;
+	
+	            sortingState.sort(function (a, b) {
+	                return b.score - a.score;
+	            });
+	
+	            sortingState = sortingState.slice(0, 10);
+	
+	            this.setState({ hackerData: sortingState });
 	        }
 	    }, {
 	        key: 'componentDidMount',
@@ -131,7 +156,9 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-	            return _react2.default.createElement(_topTen2.default, { topTenData: this.state.hackerData });
+	            return _react2.default.createElement(_topTen2.default, { topTenData: this.state.hackerData,
+	                filterStory: this.changeStateByFilteringStory.bind(this),
+	                filterState: this.changeStateByFilteringAuthor.bind(this) });
 	        }
 	    }]);
 	
@@ -22592,15 +22619,47 @@
 	  function TopTen(props) {
 	    _classCallCheck(this, TopTen);
 	
-	    return _possibleConstructorReturn(this, (TopTen.__proto__ || Object.getPrototypeOf(TopTen)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (TopTen.__proto__ || Object.getPrototypeOf(TopTen)).call(this, props));
+	
+	    _this.state = {
+	      storyFilter: false,
+	      authorFilter: false,
+	      showTitleCategory: 'Title',
+	      showAuthorCategory: 'Author',
+	      showScoreCategory: 'Score',
+	      showKarmaCategory: 'Karma',
+	      showAboutCategory: ''
+	
+	    };
+	    return _this;
 	  }
 	
 	  _createClass(TopTen, [{
+	    key: 'authorFilterClick',
+	    value: function authorFilterClick() {
+	      this.setState({ authorFilter: true, storyFilter: false, showTitleCategory: '', showScoreCategory: '',
+	        showAuthorCategory: 'Author', showKarmaCategory: 'Karma', showAboutCategory: 'About'
+	      });
+	      this.props.filterState();
+	    }
+	  }, {
+	    key: 'storyFilterClick',
+	    value: function storyFilterClick() {
+	      this.setState({ storyFilter: true, authorFilter: false, showTitleCategory: 'Title', showScoreCategory: '',
+	        showKarmaCategory: '', showAboutCategory: '', showAuthorCategory: 'Author'
+	      });
+	      this.props.filterStory();
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var _this2 = this;
+	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
+	        _react2.default.createElement('input', { type: 'submit', value: 'Top Ten Stories', onClick: this.storyFilterClick.bind(this) }),
+	        _react2.default.createElement('input', { type: 'submit', value: 'Top Ten Authors', onClick: this.authorFilterClick.bind(this) }),
 	        _react2.default.createElement(
 	          'h1',
 	          null,
@@ -22618,17 +22677,27 @@
 	              _react2.default.createElement(
 	                'th',
 	                null,
-	                'Title'
+	                this.state.showTitleCategory
 	              ),
 	              _react2.default.createElement(
 	                'th',
 	                null,
-	                'Author'
+	                this.state.showAuthorCategory
 	              ),
 	              _react2.default.createElement(
 	                'th',
 	                null,
-	                'Score'
+	                this.state.showScoreCategory
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                this.state.showKarmaCategory
+	              ),
+	              _react2.default.createElement(
+	                'th',
+	                null,
+	                this.state.showAboutCategory
 	              )
 	            )
 	          ),
@@ -22636,25 +22705,67 @@
 	            'tbody',
 	            null,
 	            this.props.topTenData.map(function (story) {
-	              return _react2.default.createElement(
-	                'tr',
-	                null,
-	                _react2.default.createElement(
-	                  'td',
+	              if (!_this2.state.authorFilter && !_this2.state.storyFilter) {
+	                return _react2.default.createElement(
+	                  'tr',
 	                  null,
-	                  story.title
-	                ),
-	                _react2.default.createElement(
-	                  'td',
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.title
+	                  ),
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.by.id
+	                  ),
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.score
+	                  ),
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.by.karma
+	                  )
+	                );
+	              } else if (_this2.state.authorFilter === true) {
+	                return _react2.default.createElement(
+	                  'tr',
 	                  null,
-	                  story.by.id
-	                ),
-	                _react2.default.createElement(
-	                  'td',
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.by.id
+	                  ),
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.by.karma
+	                  ),
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.by.about
+	                  )
+	                );
+	              } else if (_this2.state.storyFilter === true) {
+	                return _react2.default.createElement(
+	                  'tr',
 	                  null,
-	                  story.score
-	                )
-	              );
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.title
+	                  ),
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.by.id
+	                  )
+	                );
+	              }
 	            })
 	          )
 	        )
