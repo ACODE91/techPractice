@@ -34,3 +34,6 @@ getJSONFromHackerNews(topStoriesURL, function(err, data) {
   console.log(data, 'data, expect to be ids for top 500 stories');
   mongoose.disconnect();
 });
+
+//module.exports.getUserJSONFromHackerNews = getUserJSONFromHackerNews;
+module.exports.getJSONFromHackerNews = getJSONFromHackerNews;
