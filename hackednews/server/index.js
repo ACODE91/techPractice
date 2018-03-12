@@ -23,6 +23,6 @@ app.use(express.static(__dirname + '/../react-client/dist'));
 app.use('/api/story', storyRouter);
 
 
-app.listen(8000, function() {
-  console.log('listening on port 8000');
+app.listen(7000, function() {
+  console.log('listening on port 7000');
 });

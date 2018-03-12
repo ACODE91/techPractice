@@ -10,7 +10,7 @@ module.exports = [
         14239942,
         13970420
       ]
-    },
+    }, 
     "descendants": 119,
     "id": 14257744,
     "kids": [

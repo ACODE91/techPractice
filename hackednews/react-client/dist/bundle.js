@@ -22629,7 +22629,6 @@
 	      showScoreCategory: 'Score',
 	      showKarmaCategory: 'Karma',
 	      showAboutCategory: ''
-	
 	    };
 	    return _this;
 	  }
@@ -22775,8 +22774,6 @@
 	
 	  return TopTen;
 	}(_react2.default.Component);
-	
-	;
 	
 	exports.default = TopTen;
 

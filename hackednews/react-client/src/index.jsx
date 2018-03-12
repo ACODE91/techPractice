@@ -12,7 +12,7 @@ class App extends React.Component {
         }
     }
 
-    renderDefault(){
+    renderDefault() {
         $.ajax({
         type: 'GET',
         url: '/api/story',
