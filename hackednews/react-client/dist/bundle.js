@@ -63,13 +63,17 @@
 	
 	var _topTen2 = _interopRequireDefault(_topTen);
 	
-	var _jquery = __webpack_require__(/*! jquery */ 185);
+	var _topTenAuthors = __webpack_require__(/*! ./components/topTenAuthors.jsx */ 185);
+	
+	var _topTenAuthors2 = _interopRequireDefault(_topTenAuthors);
+	
+	var _authorSearch = __webpack_require__(/*! ./components/authorSearch.jsx */ 186);
+	
+	var _authorSearch2 = _interopRequireDefault(_authorSearch);
+	
+	var _jquery = __webpack_require__(/*! jquery */ 187);
 	
 	var _jquery2 = _interopRequireDefault(_jquery);
-	
-	var _dummy_data = __webpack_require__(/*! ../dummy_data.js */ 186);
-	
-	var _dummy_data2 = _interopRequireDefault(_dummy_data);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -80,89 +84,77 @@
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
 	var App = function (_React$Component) {
-	    _inherits(App, _React$Component);
+	  _inherits(App, _React$Component);
 	
-	    function App(props) {
-	        _classCallCheck(this, App);
+	  function App(props) {
+	    _classCallCheck(this, App);
 	
-	        var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 	
-	        _this.state = {
-	            hackerData: _dummy_data2.default
-	        };
-	        return _this;
+	    _this.state = {
+	      stories: [],
+	      authors: [],
+	      searchedAuthor: [],
+	      filterByStory: true,
+	      filterByAuthor: false,
+	      authorSearchTab: false
+	    };
+	    return _this;
+	  }
+	
+	  _createClass(App, [{
+	    key: 'renderDefault',
+	    value: function renderDefault() {
+	      var _this2 = this;
+	
+	      _jquery2.default.ajax({
+	        type: 'GET',
+	        url: '/api/story',
+	        dataType: 'json',
+	        success: function success(storiesData) {
+	          _this2.setState({ stories: storiesData });
+	        }
+	      });
+	
+	      _jquery2.default.ajax({
+	        type: 'GET',
+	        url: '/api/author',
+	        dataType: 'json',
+	        success: function success(authorsData) {
+	          _this2.setState({ authors: authorsData });
+	        }
+	      });
 	    }
+	  }, {
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.renderDefault();
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this3 = this;
 	
-	    _createClass(App, [{
-	        key: 'renderDefault',
-	        value: function renderDefault() {
-	            var _this2 = this;
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('input', { type: 'submit', value: 'Top Ten Stories', onClick: function onClick() {
+	            _this3.state.filterByAuthor = false;_this3.state.filterByStory = true;_this3.state.authorSearchTab = false;_this3.setState();
+	          } }),
+	        _react2.default.createElement('input', { type: 'submit', value: 'Top Ten Authors', onClick: function onClick() {
+	            _this3.state.filterByAuthor = true;_this3.state.authorSearchTab = false;_this3.state.filterByStory = false;_this3.setState();
+	          } }),
+	        _react2.default.createElement('input', { type: 'submit', value: 'Author Search', onClick: function onClick() {
+	            _this3.state.authorSearchTab = true;_this3.state.filterByAuthor = false;_this3.state.filterByStory = false;_this3.setState();
+	          } }),
+	        this.state.filterByStory ? _react2.default.createElement(_topTen2.default, { topTenStories: this.state.stories }) : _react2.default.createElement('div', null),
+	        this.state.filterByAuthor ? _react2.default.createElement(_topTenAuthors2.default, { topTenAuthors: this.state.authors }) : _react2.default.createElement('div', null),
+	        this.state.authorSearchTab ? _react2.default.createElement(_authorSearch2.default, null) : _react2.default.createElement('div', null)
+	      );
+	    }
+	  }]);
 	
-	            _jquery2.default.ajax({
-	                type: 'GET',
-	                url: '/api/story',
-	                dataType: 'json',
-	                success: function success(sampleData) {
-	                    _this2.setState({ hackerData: sampleData });
-	                }
-	            });
-	        }
-	    }, {
-	        key: 'changeStateByFilteringAuthor',
-	        value: function changeStateByFilteringAuthor() {
-	            var sortingState = this.state.hackerData;
-	
-	            sortingState.sort(function (a, b) {
-	                return b.by.karma - a.by.karma;
-	            });
-	
-	            sortingState = sortingState.slice(0, 10);
-	
-	            this.setState({ hackerData: sortingState });
-	        }
-	    }, {
-	        key: 'changeStateByFilteringStory',
-	        value: function changeStateByFilteringStory() {
-	            var sortingState = this.state.hackerData;
-	
-	            sortingState.sort(function (a, b) {
-	                return b.score - a.score;
-	            });
-	
-	            sortingState = sortingState.slice(0, 10);
-	
-	            this.setState({ hackerData: sortingState });
-	        }
-	    }, {
-	        key: 'componentDidMount',
-	        value: function componentDidMount() {
-	            this.renderDefault();
-	        }
-	
-	        // clickFn(){
-	        //     //add all of the dummy data on the view first and 
-	        //     //on click use ajax post to send it over to the database
-	        //     $.ajax({
-	        //         type: 'POST',
-	        //         url: '/',
-	        //         data: this.state.dummyData, //array
-	        //         dataType: 'application/json',
-	        //         success: (gotData) => {
-	        //             console.log(gotData);
-	        //         }
-	        //     })
-	        // }
-	
-	    }, {
-	        key: 'render',
-	        value: function render() {
-	            return _react2.default.createElement(_topTen2.default, { topTenData: this.state.hackerData,
-	                filterStory: this.changeStateByFilteringStory.bind(this),
-	                filterState: this.changeStateByFilteringAuthor.bind(this) });
-	        }
-	    }]);
-	
-	    return App;
+	  return App;
 	}(_react2.default.Component);
 	
 	_reactDom2.default.render(_react2.default.createElement(App, null), document.getElementById('app'));
@@ -22652,15 +22644,11 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var _this2 = this;
-	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement('input', { type: 'submit', value: 'Top Ten Stories', onClick: this.storyFilterClick.bind(this) }),
-	        _react2.default.createElement('input', { type: 'submit', value: 'Top Ten Authors', onClick: this.authorFilterClick.bind(this) }),
 	        _react2.default.createElement(
-	          'h1',
+	          'div',
 	          null,
 	          ' Top Ten Stories '
 	        ),
@@ -22682,89 +22670,28 @@
 	                'th',
 	                null,
 	                this.state.showAuthorCategory
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                this.state.showScoreCategory
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                this.state.showKarmaCategory
-	              ),
-	              _react2.default.createElement(
-	                'th',
-	                null,
-	                this.state.showAboutCategory
 	              )
 	            )
 	          ),
 	          _react2.default.createElement(
 	            'tbody',
 	            null,
-	            this.props.topTenData.map(function (story) {
-	              if (!_this2.state.authorFilter && !_this2.state.storyFilter) {
-	                return _react2.default.createElement(
-	                  'tr',
+	            this.props.topTenStories.map(function (story) {
+	
+	              return _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                  'td',
 	                  null,
-	                  _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    story.title
-	                  ),
-	                  _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    story.by.id
-	                  ),
-	                  _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    story.score
-	                  ),
-	                  _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    story.by.karma
-	                  )
-	                );
-	              } else if (_this2.state.authorFilter === true) {
-	                return _react2.default.createElement(
-	                  'tr',
+	                  story.title
+	                ),
+	                _react2.default.createElement(
+	                  'td',
 	                  null,
-	                  _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    story.by.id
-	                  ),
-	                  _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    story.by.karma
-	                  ),
-	                  _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    story.by.about
-	                  )
-	                );
-	              } else if (_this2.state.storyFilter === true) {
-	                return _react2.default.createElement(
-	                  'tr',
-	                  null,
-	                  _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    story.title
-	                  ),
-	                  _react2.default.createElement(
-	                    'td',
-	                    null,
-	                    story.by.id
-	                  )
-	                );
-	              }
+	                  story.by
+	                )
+	              );
 	            })
 	          )
 	        )
@@ -22779,6 +22706,224 @@
 
 /***/ }),
 /* 185 */
+/*!*******************************************************!*\
+  !*** ./react-client/src/components/topTenAuthors.jsx ***!
+  \*******************************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = TopTenAuthors;
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function TopTenAuthors(props) {
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'table',
+	      null,
+	      _react2.default.createElement(
+	        'thead',
+	        null,
+	        _react2.default.createElement(
+	          'tr',
+	          null,
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Name'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'Karma'
+	          ),
+	          _react2.default.createElement(
+	            'th',
+	            null,
+	            'About'
+	          )
+	        )
+	      ),
+	      _react2.default.createElement(
+	        'tbody',
+	        null,
+	        props.topTenAuthors.map(function (author) {
+	
+	          return _react2.default.createElement(
+	            'tr',
+	            null,
+	            _react2.default.createElement(
+	              'td',
+	              null,
+	              author.id
+	            ),
+	            _react2.default.createElement(
+	              'td',
+	              null,
+	              author.karma
+	            ),
+	            _react2.default.createElement(
+	              'td',
+	              null,
+	              author.about
+	            )
+	          );
+	        })
+	      )
+	    )
+	  );
+	}
+
+/***/ }),
+/* 186 */
+/*!******************************************************!*\
+  !*** ./react-client/src/components/authorSearch.jsx ***!
+  \******************************************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _jquery = __webpack_require__(/*! jquery */ 187);
+	
+	var _jquery2 = _interopRequireDefault(_jquery);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var AuthorSearch = function (_React$Component) {
+	  _inherits(AuthorSearch, _React$Component);
+	
+	  function AuthorSearch(props) {
+	    _classCallCheck(this, AuthorSearch);
+	
+	    var _this = _possibleConstructorReturn(this, (AuthorSearch.__proto__ || Object.getPrototypeOf(AuthorSearch)).call(this, props));
+	
+	    _this.state = {
+	      searched: false,
+	      searchedAuthor: '',
+	      author: []
+	    };
+	    _this.handleChange.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(AuthorSearch, [{
+	    key: 'handleChange',
+	    value: function handleChange(event) {
+	      this.state.searchedAuthor = event.target.value;
+	      this.setState();
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit() {
+	      var _this2 = this;
+	
+	      _jquery2.default.ajax({
+	        type: 'get',
+	        url: '/api/author/' + this.state.searchedAuthor,
+	        dataType: 'json',
+	        success: function success(authorData) {
+	          _this2.setState({ author: authorData, searched: true });
+	        }
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _this3 = this;
+	
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement('input', { type: 'text', placeholder: 'Author Name', onChange: function onChange(e) {
+	            _this3.handleChange(e);
+	          } }),
+	        _react2.default.createElement('input', { type: 'submit', value: 'search', onClick: this.handleSubmit.bind(this) }),
+	        this.state.searched ? _react2.default.createElement(
+	          'div',
+	          null,
+	          'showing results for ',
+	          this.state.searchedAuthor,
+	          _react2.default.createElement(
+	            'table',
+	            null,
+	            _react2.default.createElement(
+	              'thead',
+	              null,
+	              _react2.default.createElement(
+	                'tr',
+	                null,
+	                _react2.default.createElement(
+	                  'th',
+	                  null,
+	                  'Title'
+	                ),
+	                _react2.default.createElement(
+	                  'th',
+	                  null,
+	                  'Points'
+	                )
+	              )
+	            ),
+	            _react2.default.createElement(
+	              'tbody',
+	              null,
+	              this.state.author.map(function (story) {
+	
+	                return _react2.default.createElement(
+	                  'tr',
+	                  null,
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.title
+	                  ),
+	                  _react2.default.createElement(
+	                    'td',
+	                    null,
+	                    story.score
+	                  )
+	                );
+	              })
+	            )
+	          )
+	        ) : _react2.default.createElement('div', null)
+	      );
+	    }
+	  }]);
+	
+	  return AuthorSearch;
+	}(_react2.default.Component);
+	
+	exports.default = AuthorSearch;
+
+/***/ }),
+/* 187 */
 /*!*********************************!*\
   !*** ./~/jquery/dist/jquery.js ***!
   \*********************************/
@@ -33149,36 +33294,6 @@
 	return jQuery;
 	} );
 
-
-/***/ }),
-/* 186 */
-/*!************************************!*\
-  !*** ./react-client/dummy_data.js ***!
-  \************************************/
-/***/ (function(module, exports) {
-
-	module.exports = [
-	  {
-	    'by': {
-	      'about': 'My name is Erik',
-	      'id': 'erikdbrown',
-	      'karma': 15319,
-	    },
-	    'id': 123456789,
-	    'score': 392,
-	    'title': 'How to write fun technical assessments for everyone!',
-	  },
-	  {
-	    'by': {
-	      'about': 'my favorite color is grey',
-	      'id': 'beth',
-	      'karma': 1000,
-	    },
-	    'id': 10000000,
-	    'score': 497,
-	    'title': 'Where to find all of the cool dogs',
-	  }
-	];
 
 /***/ })
 /******/ ]);

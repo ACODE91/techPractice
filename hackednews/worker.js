@@ -11,7 +11,6 @@ mongoose.connect('mongodb://localhost/hackednews');
 // You are not required to use this code (though you may).
 var topStoriesURL = 'https://hacker-news.firebaseio.com/v0/topstories.json';
 var testUrl = 'https://hacker-news.firebaseio.com/v0/item/16560655.json?print=pretty';
-var topStoryIds = [];
 
 var isJSONResponse = function(headers) {
   return headers['content-type'].includes('json');

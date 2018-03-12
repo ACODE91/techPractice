@@ -34,44 +34,24 @@ export default class TopTen extends React.Component {
   render() {
     return (
       <div>
-        <input type="submit" value="Top Ten Stories" onClick={this.storyFilterClick.bind(this)}></input>
-        <input type="submit" value="Top Ten Authors" onClick={this.authorFilterClick.bind(this)}></input>
-        <h1> Top Ten Stories </h1>
+        <div> Top Ten Stories </div>
         <table>
           <thead>
             <tr>
               <th>{this.state.showTitleCategory}</th>
               <th>{this.state.showAuthorCategory}</th>
-              <th>{this.state.showScoreCategory}</th>
-              <th>{this.state.showKarmaCategory}</th>
-              <th>{this.state.showAboutCategory}</th>
             </tr>
           </thead>
           <tbody>
-            {this.props.topTenData.map((story) => {
-              if (!this.state.authorFilter && !this.state.storyFilter) {
-                return (<tr>
-                  <td>{story.title}</td>
-                  <td>{story.by.id}</td>
-                  <td>{story.score}</td>
-                  <td>{story.by.karma}</td>
-                </tr>);
-              } else if (this.state.authorFilter === true) {
-                return (<tr>
-                  <td>{story.by.id}</td>
-                  <td>{story.by.karma}</td>
-                  <td>{story.by.about}</td>
-                </tr>
-                );
-              } else if (this.state.storyFilter === true) {
-                return (
-                  <tr>
-                    <td>{story.title}</td>
-                    <td>{story.by.id}</td>
-                  </tr>
-                );
-              }
-            })}
+            {this.props.topTenStories.map((story) => {
+    
+              return (<tr>
+                <td>{story.title}</td>
+                <td>{story.by}</td>
+              </tr>);
+
+            })
+            }
           </tbody>
         </table>
       </div>

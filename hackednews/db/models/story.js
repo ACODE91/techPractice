@@ -11,7 +11,14 @@ var storySchema = mongoose.Schema({
   title: String,
 });
 
+// var authorSchema = mongoose.Schema({
+//   name: String,
+//   karma: Number,
+//   about: String,
+// });
+
 var StoryModel = mongoose.model('Story', storySchema);
+// var AuthorModel = mongoose.model('Author', authorSchema);
 
 // findAll retrieves all stories
 function findAll(callback) {
@@ -20,7 +27,7 @@ function findAll(callback) {
 
 // findOne will retrieve the story associated with the given id
 function findOne(id, callback) {
-  StoryModel.find({id: id}, callback);
+  StoryModel.find({by: id}, callback);
 }
 
 // insertOne inserts a story into the db

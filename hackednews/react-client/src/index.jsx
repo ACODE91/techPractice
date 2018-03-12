@@ -1,77 +1,60 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import TopTen from './components/topTen.jsx';
+import TopTenAuthors from './components/topTenAuthors.jsx';
+import AuthorSearch from './components/authorSearch.jsx';
 import $ from 'jquery';
-import fillerData from '../dummy_data.js'
 
 class App extends React.Component { 
-    constructor(props){
-        super(props);
-        this.state = {
-            hackerData: fillerData 
-        }
-    }
+  constructor(props) {
+    super(props);
+    this.state = {
+      stories: [],
+      authors: [],
+      searchedAuthor: [],
+      filterByStory: true,
+      filterByAuthor: false,
+      authorSearchTab: false
+    };
+  }
 
-    renderDefault() {
-        $.ajax({
-        type: 'GET',
-        url: '/api/story',
-        dataType: 'json',
-        success: (sampleData) => {
-            this.setState({hackerData: sampleData});
-        }
-        })
-    }
-
-    changeStateByFilteringAuthor(){
-      var sortingState = this.state.hackerData;
-
-        sortingState.sort(function(a, b){
-        return b.by.karma - a.by.karma;
-        });
-
-        sortingState = sortingState.slice(0, 10);
-
-        this.setState({hackerData: sortingState});
-    }
-
-    changeStateByFilteringStory(){
-        var sortingState = this.state.hackerData;
-  
-          sortingState.sort(function(a, b){
-          return b.score - a.score;
-          });
-  
-          sortingState = sortingState.slice(0, 10);
-  
-          this.setState({hackerData: sortingState});
+  renderDefault() {
+    $.ajax({
+      type: 'GET',
+      url: '/api/story',
+      dataType: 'json',
+      success: (storiesData) => {
+        this.setState({stories: storiesData});
       }
+    });
 
-    componentDidMount() {
-        this.renderDefault()
-    }
+    $.ajax({
+      type: 'GET',
+      url: '/api/author',
+      dataType: 'json',
+      success: (authorsData) => {
+        this.setState({authors: authorsData});
+      }
+    });
 
-    // clickFn(){
-    //     //add all of the dummy data on the view first and 
-    //     //on click use ajax post to send it over to the database
-    //     $.ajax({
-    //         type: 'POST',
-    //         url: '/',
-    //         data: this.state.dummyData, //array
-    //         dataType: 'application/json',
-    //         success: (gotData) => {
-    //             console.log(gotData);
-    //         }
-    //     })
-    // }
+  }
 
-   render() { 
+  componentDidMount() {
+    this.renderDefault();
+  }
+
+  render() { 
     return (      
-    <TopTen topTenData={this.state.hackerData} 
-    filterStory={this.changeStateByFilteringStory.bind(this)}
-    filterState={this.changeStateByFilteringAuthor.bind(this)}/>
-    )
-   }
+      <div>
+        <input type="submit" value="Top Ten Stories" onClick={() => {this.state.filterByAuthor = false; this.state.filterByStory = true; this.state.authorSearchTab = false; this.setState();}}></input>
+        <input type="submit" value="Top Ten Authors" onClick={() => {this.state.filterByAuthor = true; this.state.authorSearchTab = false; this.state.filterByStory = false; this.setState();}}></input>
+        <input type="submit" value="Author Search" onClick={() => {this.state.authorSearchTab = true; this.state.filterByAuthor = false; this.state.filterByStory = false; this.setState();}}></input>
+        {(this.state.filterByStory) ? <TopTen topTenStories={this.state.stories}/> : <div></div>}
+        {(this.state.filterByAuthor) ? <TopTenAuthors topTenAuthors={this.state.authors}/> : <div></div>}
+        {(this.state.authorSearchTab) ? <AuthorSearch /> : <div></div>}
+      </div>
+    );
+  }
 }
 ReactDOM.render(<App />, document.getElementById('app'));
 
